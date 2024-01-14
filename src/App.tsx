@@ -3,6 +3,8 @@ import { Button, Typography, Container, Grid, Paper } from "@mui/material";
 import EventList from "./components/EventList";
 import EventForm from "./components/EventForm";
 import StatisticsChart from "./components/StatticsChart";
+import { Provider } from "react-redux";
+import { store } from "./redux/store";
 
 const App: React.FC = () => {
   const [showForm, setShowForm] = useState(false);
@@ -16,7 +18,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div data-testid="app-component">
+    <Provider store={store}>
       <Container style={{ marginTop: 20, maxWidth: "none" }}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
@@ -58,9 +60,9 @@ const App: React.FC = () => {
             </Paper>
           </Grid>
         </Grid>
-        {showForm && <EventForm handleClose={handleCloseForm} />}
+        {showForm && <EventForm handleCloseForm={handleCloseForm} />}
       </Container>
-    </div>
+    </Provider>
   );
 };
 

@@ -15,7 +15,7 @@ import {
 import { toast } from "react-toastify";
 
 interface EventFormProps {
-  handleClose: () => void;
+  handleCloseForm: () => any;
 }
 
 const validationSchema = Yup.object({
@@ -27,8 +27,8 @@ const validationSchema = Yup.object({
   description: Yup.string().required("La descripción es requerida"),
 });
 
-const EventForm: React.FC<EventFormProps> = ({ handleClose }) => {
-  const dispatch = useDispatch();
+const EventForm: React.FC<EventFormProps> = ({ handleCloseForm }) => {
+  const dispatchs = useDispatch();
 
   const handleSubmit = (values: {
     name: string;
@@ -37,12 +37,12 @@ const EventForm: React.FC<EventFormProps> = ({ handleClose }) => {
     description: string;
     id: number;
   }) => {
-    dispatch(addEvent(values), toast.success("Evento creado con éxito"));
-    handleClose();
+    dispatchs(addEvent(values), toast.success("Evento creado con éxito"));
+    handleCloseForm();
   };
 
   return (
-    <Dialog open onClose={handleClose}>
+    <Dialog open onClose={handleCloseForm}>
       <DialogTitle
         style={{ textAlign: "center", padding: "16px", fontWeight: "bold" }}
         id="form-dialog-title"
@@ -56,12 +56,12 @@ const EventForm: React.FC<EventFormProps> = ({ handleClose }) => {
             date: "",
             time: "",
             description: "",
-            id: 0,
+            id: Math.floor(Math.random() * 1000) + 1,
           }}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          <Form>
+          <Form data-testid="event-form">
             <Field name="name">
               {({ field, meta }: { field: any; meta: any }) => (
                 <Input
@@ -71,9 +71,8 @@ const EventForm: React.FC<EventFormProps> = ({ handleClose }) => {
                   id="name"
                   {...field}
                   fullWidth
-                  margin="normal"
-                  error={meta.touched && Boolean(meta.error)}
-                  helperText={meta.touched && meta.error}
+                  margin="dense"
+                  error={meta.touched ? Boolean(meta.error) : undefined}
                   placeholder="Nombre"
                   inputProps={{ style: { padding: "12px" } }}
                 />
@@ -87,9 +86,8 @@ const EventForm: React.FC<EventFormProps> = ({ handleClose }) => {
                   id="date"
                   {...field}
                   fullWidth
-                  margin="normal"
-                  error={meta.touched && Boolean(meta.error)}
-                  helperText={meta.touched && meta.error}
+                  margin="dense"
+                  error={meta.touched ? Boolean(meta.error) : undefined}
                   placeholder=""
                   inputProps={{ style: { padding: "12px" } }}
                 />
@@ -103,9 +101,8 @@ const EventForm: React.FC<EventFormProps> = ({ handleClose }) => {
                   id="time"
                   {...field}
                   fullWidth
-                  margin="normal"
-                  error={meta.touched && Boolean(meta.error)}
-                  helperText={meta.touched && meta.error}
+                  margin="dense"
+                  error={meta.touched ? Boolean(meta.error) : undefined}
                   placeholder=""
                   inputProps={{ style: { padding: "12px" } }}
                 />
@@ -121,8 +118,7 @@ const EventForm: React.FC<EventFormProps> = ({ handleClose }) => {
                   id="description"
                   {...field}
                   style={{ marginBottom: 16, marginTop: 16, width: "100%" }}
-                  error={meta.touched && Boolean(meta.error)}
-                  helperText={meta.touched && meta.error}
+                  error={(meta.touched && !!meta.error).toString()}
                 />
               )}
             </Field>
@@ -131,7 +127,7 @@ const EventForm: React.FC<EventFormProps> = ({ handleClose }) => {
                 Guardar
               </Button>
               <Button
-                onClick={handleClose}
+                onClick={handleCloseForm}
                 color="secondary"
                 data-testid="Cancelar"
               >
