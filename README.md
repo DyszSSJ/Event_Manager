@@ -24,6 +24,12 @@ En la terminal, ejecuta: npm start
 
 La aplicación estará disponible en http://localhost:3000.
 
+EJECUTA LOS TEST:
+
+En la terminal, ejecuta npm test
+
+Te lanzara el resultado de los test 
+
 FUNCIONALIDADES:
 
 Creación de Eventos: Agrega eventos a través de la interfaz de usuario.
