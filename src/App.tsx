@@ -28,7 +28,7 @@ const App: React.FC = () => {
             <Button
               variant="contained"
               onClick={handleAddEventClick}
-              style={{ marginBottom: 20, backgroundColor: "#5c6cff" }}
+              style={{ marginBottom: 20, backgroundColor: "primary.main" }}
             >
               Agregar Evento
             </Button>

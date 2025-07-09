@@ -9,9 +9,13 @@ import {
   DialogContent,
   DialogActions,
   Button,
-  TextareaAutosize,
-  Input,
+  TextField,
+  Typography,
+  Box,
+  Stack,
+  Paper,
 } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import { toast } from "react-toastify";
 
 interface EventFormProps {
@@ -26,6 +30,12 @@ const validationSchema = Yup.object({
   time: Yup.string().required("La hora es requerida"),
   description: Yup.string().required("La descripción es requerida"),
 });
+
+const FormPaper = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(3),
+  borderRadius: theme.shape.borderRadius,
+  boxShadow: theme.shadows[2],
+}));
 
 const EventForm: React.FC<EventFormProps> = ({ handleCloseForm }) => {
   const dispatchs = useDispatch();
@@ -42,100 +52,127 @@ const EventForm: React.FC<EventFormProps> = ({ handleCloseForm }) => {
   };
 
   return (
-    <Dialog open onClose={handleCloseForm}>
-      <DialogTitle
-        style={{ textAlign: "center", padding: "16px", fontWeight: "bold" }}
-        id="form-dialog-title"
-      >
-        Crear Evento
+    <Dialog open onClose={handleCloseForm} fullWidth maxWidth="md">
+      <DialogTitle sx={{ 
+        textAlign: "center", 
+        py: 2,
+        bgcolor: "primary.main",
+        color: "primary.contrastText"
+      }}>
+        <Typography variant="h5" component="div" fontWeight="bold">
+          Crear Evento
+        </Typography>
       </DialogTitle>
-      <DialogContent>
-        <Formik
-          initialValues={{
-            name: "",
-            date: "",
-            time: "",
-            description: "",
-            id: Math.floor(Math.random() * 1000) + 1,
-          }}
-          validationSchema={validationSchema}
-          onSubmit={handleSubmit}
-        >
-          <Form data-testid="event-form">
-            <Field name="name">
-              {({ field, meta }: { field: any; meta: any }) => (
-                <Input
-                  data-testid="name-input"
-                  label="Nombre"
-                  type="text"
-                  id="name"
-                  {...field}
-                  fullWidth
-                  margin="dense"
-                  error={meta.touched ? Boolean(meta.error) : undefined}
-                  placeholder="Nombre"
-                  inputProps={{ style: { padding: "12px" } }}
-                />
-              )}
-            </Field>
-            <Field name="date">
-              {({ field, meta }: { field: any; meta: any }) => (
-                <Input
-                  data-testid="date-input"
-                  type="date"
-                  id="date"
-                  {...field}
-                  fullWidth
-                  margin="dense"
-                  error={meta.touched ? Boolean(meta.error) : undefined}
-                  placeholder=""
-                  inputProps={{ style: { padding: "12px" } }}
-                />
-              )}
-            </Field>
-            <Field name="time">
-              {({ field, meta }: { field: any; meta: any }) => (
-                <Input
-                  data-testid="time-input"
-                  type="time"
-                  id="time"
-                  {...field}
-                  fullWidth
-                  margin="dense"
-                  error={meta.touched ? Boolean(meta.error) : undefined}
-                  placeholder=""
-                  inputProps={{ style: { padding: "12px" } }}
-                />
-              )}
-            </Field>
-            <Field name="description">
-              {({ field, meta }: { field: any; meta: any }) => (
-                <TextareaAutosize
-                  data-testid="description-textarea"
-                  minRows={6}
-                  maxRows={6}
-                  placeholder="Descripción"
-                  id="description"
-                  {...field}
-                  style={{ marginBottom: 16, marginTop: 16, width: "100%" }}
-                  error={(meta.touched && !!meta.error).toString()}
-                />
-              )}
-            </Field>
-            <DialogActions>
-              <Button type="submit" color="primary" data-testid="Guardar">
-                Guardar
-              </Button>
-              <Button
-                onClick={handleCloseForm}
-                color="secondary"
-                data-testid="Cancelar"
-              >
-                Cancelar
-              </Button>
-            </DialogActions>
-          </Form>
-        </Formik>
+      <DialogContent sx={{ p: 3 }}>
+        <FormPaper>
+          <Formik
+            initialValues={{
+              name: "",
+              date: "",
+              time: "",
+              description: "",
+              id: Math.floor(Math.random() * 1000) + 1,
+            }}
+            validationSchema={validationSchema}
+            onSubmit={handleSubmit}
+          >
+            <Form data-testid="event-form">
+              <Stack spacing={3}>
+                <Field name="name">
+                  {({ field, meta }: { field: any; meta: any }) => (
+                    <TextField
+                      data-testid="name-input"
+                      label="Nombre del evento"
+                      type="text"
+                      id="name"
+                      variant="outlined"
+                      fullWidth
+                      {...field}
+                      error={meta.touched && Boolean(meta.error)}
+                      helperText={meta.touched && meta.error}
+                      InputProps={{
+                        sx: { borderRadius: 1 }
+                      }}
+                    />
+                  )}
+                </Field>
+                
+                <Box sx={{ display: "flex", gap: 2 }}>
+                  <Field name="date">
+                    {({ field, meta }: { field: any; meta: any }) => (
+                      <TextField
+                        data-testid="date-input"
+                        label="Fecha"
+                        type="date"
+                        id="date"
+                        variant="outlined"
+                        fullWidth
+                        {...field}
+                        error={meta.touched && Boolean(meta.error)}
+                        helperText={meta.touched && meta.error}
+                        InputLabelProps={{ shrink: true }}
+                      />
+                    )}
+                  </Field>
+                  
+                  <Field name="time">
+                    {({ field, meta }: { field: any; meta: any }) => (
+                      <TextField
+                        data-testid="time-input"
+                        label="Hora"
+                        type="time"
+                        id="time"
+                        variant="outlined"
+                        fullWidth
+                        {...field}
+                        error={meta.touched && Boolean(meta.error)}
+                        helperText={meta.touched && meta.error}
+                        InputLabelProps={{ shrink: true }}
+                      />
+                    )}
+                  </Field>
+                </Box>
+                
+                <Field name="description">
+                  {({ field, meta }: { field: any; meta: any }) => (
+                    <TextField
+                      data-testid="description-textarea"
+                      label="Descripción"
+                      id="description"
+                      multiline
+                      rows={6}
+                      variant="outlined"
+                      fullWidth
+                      {...field}
+                      error={meta.touched && Boolean(meta.error)}
+                      helperText={meta.touched && meta.error}
+                    />
+                  )}
+                </Field>
+                
+                <DialogActions sx={{ pt: 2, px: 0 }}>
+                  <Button 
+                    type="submit" 
+                    variant="contained" 
+                    color="primary" 
+                    data-testid="Guardar"
+                    sx={{ px: 4 }}
+                  >
+                    Guardar
+                  </Button>
+                  <Button
+                    onClick={handleCloseForm}
+                    variant="outlined"
+                    color="secondary"
+                    data-testid="Cancelar"
+                  >
+                    Cancelar
+                  </Button>
+                </DialogActions>
+              </Stack>
+            </Form>
+          </Formik>
+        </FormPaper>
       </DialogContent>
     </Dialog>
   );
