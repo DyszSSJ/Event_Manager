@@ -4,6 +4,11 @@ export interface Event {
     date: string;
     time: string;
     description: string;
+    location?: {
+      address: string;
+      latitude: number;
+      longitude: number;
+    };
   }
   
   export interface RootState {
